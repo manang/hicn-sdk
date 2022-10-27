@@ -34,8 +34,14 @@ jobs:
       - name: info node
         run: uname -a && sw_vers
       - name: Install dependencies
-        run: cd macos && ls /usr/local/lib/* && make dependencies
+        run: cd macos && make all
 
       - name: check openssl
         run: brew --prefix
+      # - uses: vimtor/action-zip@v1
+      #   name: save
+      #   with:
+      #     files: macos/build/hicn
+      #     recursive: false
+      #     dest: result.zip
         

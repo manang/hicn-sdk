@@ -33,7 +33,7 @@ download_hicn: init
 	@cd ${BASE_DIR}/src && if [ ! -d hicn ]; then echo "libhicn not found"; git clone https://github.com/FDio/hicn.git; fi;
 
 hicn: download_hicn
-	@mkdir -p build/hicn && cd build/hicn && cmake -GNinja ${BASE_DIR}/src/hicn  -DCMAKE_INSTALL_PREFIX=${BASE_DIR}/usr -DBUILD_APPS=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1 -DBUILD_UTILS=ON && ninja
+	@mkdir -p build/hicn && cd build/hicn && cmake -GNinja ${BASE_DIR}/src/hicn  -DCMAKE_INSTALL_PREFIX=${BASE_DIR}/usr -DBUILD_APPS=ON -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1 -DBUILD_UTILS=ON && ninja install
 
 # hicn_package: hicn_src
 # 	@mkdir -p build/hicn && cd build/hicn && make package

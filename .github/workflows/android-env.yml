@@ -40,8 +40,8 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           name: ${{github.repository}}/android-env
-          username: ${{ secrets.HICN_BOT }}
-          password: ${{ secrets.HICN_ACTIONS_TOKEN }}
+          username: publisher
+          password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
           dockerfile: android/ci/Dockerfile_env
           tags: latest,${{ steps.previoustag.outputs.tag }}

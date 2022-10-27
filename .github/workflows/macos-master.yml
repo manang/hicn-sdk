@@ -30,7 +30,47 @@ jobs:
       - name: info node
         run: uname -a && sw_vers
       - name: Install dependencies
-        run: cd macos && ls /usr/local/opt/openssl@1.1 && uname -a && sw_vers
+        run: cd macos && make all 
 
       - name: check openssl
         run: brew --prefix
+      # - uses: vimtor/action-zip@v1
+      #   name: save
+      #   with:
+      #     files: macos/usr
+      #     recursive: false
+      #     dest: hicn.zip
+      - name: Compress action step
+        uses: a7ul/tar-action@v1.1.0
+        id: compress
+        with:
+          command: c
+          files: |
+            ./macos/usr
+          outPath: hicn.tar.gz
+      - name: test
+        run: find . -name hicn.zip && find . -name usr && find . -name "*.tar.gz"
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: hicn.tar.gz
+          asset_name: hicn.tar.gz
+          tag: 'v0.0.1'
+          overwrite: true
+      - name: Set SHA
+        id: shasum
+        run: |
+          echo ::set-output name=sha::"$(shasum -a 256 hicn.zip | awk '{printf $1}')"
+      # - name: Bump Brew
+      #   env: 
+      #     HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.BREW_TOKEN }}
+      #   run: |
+      #     brew tap icn-team/homebrew-hicn-tap
+      #     brew bump-formula-pr -f --version=v0.0.1 --no-browse --no-audit \
+      #     --sha256=8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85 \
+      #     --url="https://github.com/manang/hicn-sdk/releases/download/v0.0.1/binaries.zip" \
+      #     icn-team/homebrew-hicn-tap/hicn
+      # - name: ls
+      #   id: ls
+      #   run: ls
