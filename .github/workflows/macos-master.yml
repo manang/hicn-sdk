@@ -30,7 +30,22 @@ jobs:
       - name: info node
         run: uname -a && sw_vers
       - name: Install dependencies
-        run: cd macos && ls /usr/local/opt/openssl@1.1 && uname -a && sw_vers
+        run: cd macos && make all
 
       - name: check openssl
         run: brew --prefix
+      - uses: vimtor/action-zip@v1
+        name: save
+        with:
+          files: macos/build/hicn
+          recursive: false
+          dest: result.zip
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: result.zip
+          asset_name: mything
+          tag: 'v0.0.1'
+          overwrite: true
+          body: "This is my release text"
